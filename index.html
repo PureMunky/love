@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background-color: #efeeee;">
+  <div style="text-align: center;">
+    <h1>Ashley & Phil</h1>
+    <h2 style="font-style: italic;">Married</h2>
+    <h2 id="display"></h2>
+    <div
+      style="display: inline-block; border-radius: 30px; height: 300px; width: 400px; background-image: url('wedding.jpg'); background-size: 100%; background-position: center;">
+    </div>
+  </div>
+  <script language="javascript">
+    var DimSync = (function () {
+      var that = {},
+        time = new Date();
+      const events = [
+        { when: new Date(2015, 6, 29, 20, 30), what: 'Married' }
+      ]
+
+      // Executes the communication plan.
+      function writeSaying(saying) {
+        document.getElementById('display').innerHTML = saying;
+      }
+
+      function formatTime(time) {
+        var pad = '000',
+          mili = '' + time.getMilliseconds();
+
+        return time.getFullYear()
+          + '/'
+          + (time.getMonth() + 1)
+          + '/'
+          + time.getDate()
+          + ' '
+          + time.getHours()
+          + ':'
+          + time.getMinutes()
+          + ':'
+          + time.getSeconds()
+          + '.'
+          + pad.substring(0, pad.length - mili.length) + mili;
+      }
+
+      function dateDiff(date1, date2) {
+        var diff = date2 - date1;
+        return millisecondsToHuman(diff);
+      }
+
+      function millisecondsToHuman(ms) {
+        const seconds = Math.floor((ms / 1000) % 60);
+        const minutes = Math.floor((ms / 1000 / 60) % 60);
+        const hours = Math.floor((ms / 1000 / 3600) % 24);
+        const days = Math.floor(ms / 1000 / 3600 / 24);
+
+        const humanized = {
+          days: days.toString(),
+          hours: hours.toString(),
+          minutes: minutes.toString(),
+          seconds: seconds.toString()
+        };
+
+        return humanized;
+      }
+      function intervalTick() {
+        const time = new Date();
+        var saying = '';
+
+        for (let i = 0; i < events.length; i++) {
+          const human = dateDiff(events[i].when, time);
+
+          saying += [
+            human.days + ' days',
+            human.hours + ' hours',
+            human.minutes + ' minutes',
+            human.seconds + ' seconds'
+          ].join(', ') + ' ago<br/>';
+        }
+
+        writeSaying(saying);
+
+        setTimeout(intervalTick, 10);
+      }
+
+      // Bestows wisdom.
+      that.AdviseMe = function () {
+        intervalTick();
+      };
+
+      that.Init = function () {
+        intervalTick();
+      }
+
+      return that;
+    }());
+
+    DimSync.Init();
+  </script>
+</body>
+
+</html>
