@@ -5,7 +5,7 @@
   <title>Love</title>
 </head>
 
-<body style="background-color: #efeeee;">
+<body>
   <div style="text-align: center;">
     <h1>Ashley & Phil</h1>
     <h2 style="font-style: italic;">Married</h2>
@@ -14,6 +14,8 @@
       style="display: inline-block; border-radius: 30px; height: 300px; width: 400px; background-image: url('wedding.jpg'); background-size: 100%; background-position: center;">
     </div>
   </div>
+  <style type="text/css" id="bgColor">
+  </style>
   <script language="javascript">
     var DimSync = (function () {
       var that = {},
@@ -22,9 +24,40 @@
         { when: new Date(2015, 5, 29, 20, 30), what: 'Married' }
       ]
 
+      var bgStart = 100;
+      var bg = {
+        red: bgStart,
+        green: bgStart,
+        blue: bgStart,
+        increment: .2,
+        ceiling: 255,
+        floor: bgStart,
+        color: 'red',
+        colors: ['red', 'green', 'blue'],
+      };
+
       // Executes the communication plan.
       function writeSaying(saying) {
         document.getElementById('display').innerHTML = saying;
+      }
+
+      function updateBGColor() {
+        if (bg[bg.color] >= bg.ceiling || bg[bg.color] <= bg.floor) {
+          bg.color = bg.colors[bg.colors.indexOf(bg.color) + 1] || bg.colors[0];
+        }
+
+        bg[bg.color] += bg.increment;
+
+        if (
+          (bg.red >= bg.ceiling && bg.green >= bg.ceiling && bg.blue >= bg.ceiling)
+          ||
+          (bg.red <= bg.floor && bg.green <= bg.floor && bg.blue <= bg.floor)
+        ) {
+          bg.increment *= -1;
+          bg.color = bg.colors[bg.colors.indexOf(bg.color) + 1] || bg.colors[0];
+        }
+
+        document.getElementById('bgColor').innerHTML = "body { background-color: rgb(" + bg.red + ", " + bg.green + ", " + bg.blue + "); }";
       }
 
       function formatTime(time) {
@@ -82,7 +115,7 @@
         }
 
         writeSaying(saying);
-
+        updateBGColor();
         setTimeout(intervalTick, 10);
       }
 
